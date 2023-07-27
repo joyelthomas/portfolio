@@ -1,14 +1,13 @@
 document.addEventListener("DOMContentLoaded", function() {
     var imageContainer = document.getElementById("imageContainer");
 
-    // Fetch image names using Fetch API
-    fetch("assets/images/")
-        .then(response => response.text())
-        .then(text => {
-            // Parse the directory listing (Note: this may not work for all browsers)
-            var imageFilenames = text
-                .split("\n")
-                .filter(filename => filename.trim() !== "")
+    // Fetch image names using GitHub API
+    fetch("https://api.github.com/repos/your-username/your-repository/contents/assets/images")
+        .then(response => response.json())
+        .then(data => {
+            var imageFilenames = data
+                .filter(file => file.type === "file")
+                .map(file => file.name)
                 .filter(filename => /\.(jpg|jpeg|png|gif)$/i.test(filename));
 
             // Generate HTML for each image
@@ -31,3 +30,4 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error("Error fetching image names:", error);
         });
 });
+
